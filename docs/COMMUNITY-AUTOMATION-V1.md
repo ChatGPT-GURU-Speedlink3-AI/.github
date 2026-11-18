@@ -35,3 +35,13 @@ Founder-authorized Issue [EMERGENCY-HOOK-002 #1](https://github.com/ChatGPT-GURU
 **Known limits:** No automatic cross-repository coordination, no AI agent dispatch, no external email campaign, no scheduled outreach, and no cross-platform acknowledgments. These require additional reviewed integrations.
 
 Independent project founded by Speedlink3 AI Technologies; platform and AI-tool mentions do not imply affiliation or endorsement.
+
+## First GitHub Actions execution evidence (2026-11-19, Asia/Dhaka)
+
+| Test | Trigger / Issue | Result | Evidence |
+|---|---|---|---|
+| V1-T01 | Authorized `/triage` issue comment on EMERGENCY-HOOK-002 #1 | **PASS** — run completed; labels `community-review`, `urgent-review`, `needs-evidence` and one bot evidence reminder verified | [Run 44420424572](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/actions/runs/44420424572), [issue #1](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues/1) |
+| V1-T02 | New public invitation issue #2 opened | **PASS** — run completed; labels `community-review`, `welcome-contributor` and one bot evidence reminder verified | [Run 44420514896](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/actions/runs/44420514896), [issue #2](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues/2) |
+
+Evidence method: Real GitHub Actions run statuses and issue labels/comments fetched from the connected GitHub repository. These tests do **not** prove automatic notification to external AI products, execution of PHP/MySQL tests, or WordPress production safety.
+
