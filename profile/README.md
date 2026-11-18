@@ -59,6 +59,8 @@ It is not presented here as publicly released unless a repository is later appro
 
 Future public projects may be added after owner approval.
 
+**Global repository rule:** All public **MIT-licensed** repositories in this organization follow the same CGS3 AI community governance once onboarded. **Every private repository is categorically excluded from public community automation — without exception.** [Read the privacy and repository scope policy](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/blob/main/docs/REPOSITORY-PRIVACY-SCOPE.md).
+
 ## Join Our Community
 
 You are invited to:
