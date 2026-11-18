@@ -70,6 +70,10 @@ You are invited to:
 - Improve accessibility and quality.
 - Learn collaboratively and respectfully.
 
+**Ready to contribute?** [Join as a volunteer](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues/new?template=community-volunteer.yml) · [View the open community invitation](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues/2) · [Review current technical issues](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues) · [Read the community coordination policy](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/blob/main/docs/COMMUNITY-AUTOMATION-V1.md).
+
+No experience threshold, public contact details, or formal affiliation is required. Community participation is voluntary and does not automatically grant source or production write access.
+
 Please follow the public repository's issue templates, contribution guidance and code of conduct where those resources exist.
 
 ## Credits
