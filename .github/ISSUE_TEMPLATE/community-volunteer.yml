@@ -1,0 +1,38 @@
+name: Join the community — volunteer contribution
+description: Introduce yourself and offer open-source help; beginners welcome.
+title: "[Community volunteer] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome to the independent Speedlink3 Open Development Community. Everyone is invited, regardless of experience or location. Please share only information you want public. No private identity, email, phone, passwords or tokens are required.
+  - type: dropdown
+    id: interest
+    attributes:
+      label: How would you like to contribute?
+      options:
+        - Independent code review
+        - Testing or reproducible bug reports
+        - Security review (without disclosing private vulnerability details)
+        - Documentation or translation
+        - Accessibility or design
+        - Research and creative ideas
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: What would you like to help with?
+      description: A few lines are enough; no portfolio or proof of expertise is required.
+    validations:
+      required: true
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Community expectations
+      options:
+        - label: I understand joining does not automatically grant repository or production write access.
+          required: true
+        - label: I will avoid sharing secrets or private personal information.
+          required: true
