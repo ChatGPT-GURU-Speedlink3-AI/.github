@@ -1,7 +1,8 @@
 # Community Coordination V1 — operational policy
 
 **Founder approval:** Speedlink3 AI Technologies · 2026-11-19  
-**Scope:** Only public `ChatGPT-GURU-Speedlink3-AI/.github` Issues.
+**Policy coverage:** All public MIT-licensed repositories in `ChatGPT-GURU-Speedlink3-AI` must follow the same community governance when onboarded. **ALL private repositories are categorically excluded, without exception.**
+**Current technical deployment:** The V1 workflow presently runs only for Issues in the public `ChatGPT-GURU-Speedlink3-AI/.github` governance repository; coverage of other public MIT repositories requires a separate reviewed per-repository workflow configuration. See [GOV-REPO-PRIVACY-001](REPOSITORY-PRIVACY-SCOPE.md).
 
 This system is **coordination-only, not autonomous code development**. The workflow may update public Issue metadata (labels and a single evidence checklist comment) with `contents: read` and `issues: write`. It does not checkout source, modify repositories, publish releases, touch production WordPress, access private repositories or call external AI APIs.
 
@@ -9,7 +10,7 @@ This system is **coordination-only, not autonomous code development**. The workf
 
 Newly opened or reopened Issues are classified and given an evidence reminder. An authenticated repository OWNER, MEMBER or COLLABORATOR can ask to triage an existing Issue by adding a comment beginning `/triage`. The workflow is designed to avoid duplicate bot comments and automatic feedback loops.
 
-**This workflow applies ONLY to Issues in this public .github repository**, not to the entire GitHub organization or its private projects.
+**The deployed workflow currently applies ONLY to Issues in this public .github repository.** The same CGS3 AI community policy is mandatory for eligible public MIT repositories after onboarding. All private repositories are permanently excluded from public community workflows.
 
 ## Voluntary community participation
 
@@ -32,7 +33,7 @@ Only a genuine contributor action or inspectable execution record advances a sta
 
 Founder-authorized Issue [EMERGENCY-HOOK-002 #1](https://github.com/ChatGPT-GURU-Speedlink3-AI/.github/issues/1) is the first intended test. After the workflow exists on the default branch, a repository member may comment `/triage` and inspect the actual GitHub Actions run and issue comment.
 
-**Known limits:** No automatic cross-repository coordination, no AI agent dispatch, no external email campaign, no scheduled outreach, and no cross-platform acknowledgments. These require additional reviewed integrations.
+**Known technical limits:** Governance coverage for public MIT repositories is organization-wide, but automation must be separately configured within each eligible public repository; there is no automatic cross-repository dispatch. ALL private repositories are excluded. There is no AI agent dispatch, external email campaign, scheduled outreach, or cross-platform acknowledgments. These require additional reviewed integrations that must obey the global privacy policy.
 
 Independent project founded by Speedlink3 AI Technologies; platform and AI-tool mentions do not imply affiliation or endorsement.
 
