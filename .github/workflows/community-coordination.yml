@@ -1,0 +1,130 @@
+name: Community Coordination V1
+
+on:
+  issues:
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Existing issue number to triage"
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: community-triage-${{ github.event.issue.number || inputs.issue_number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    if: >-
+      (github.event_name == 'issues' && github.event.issue.pull_request == null) ||
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request == null &&
+       startsWith(github.event.comment.body, '/triage') &&
+       (github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Classify public issue and request evidence (no code changes)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_INPUT: ${{ inputs.issue_number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error, urllib.parse
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as fh:
+              event = json.load(fh)
+          number = (event.get('issue') or {}).get('number') or os.environ.get('ISSUE_INPUT')
+          if not str(number).isdigit():
+              raise SystemExit('Invalid issue number')
+          number = int(number)
+          base = 'https://api.github.com/repos/' + repo
+          headers = {
+              'Authorization': 'Bearer ' + token,
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'User-Agent': 'SL3CG-community-coordination-v1'
+          }
+          def api(method, path, obj=None, allow_404=False):
+              data = None if obj is None else json.dumps(obj).encode('utf-8')
+              req = urllib.request.Request(base + path, data=data, headers=headers, method=method)
+              if data is not None:
+                  req.add_header('Content-Type', 'application/json')
+              try:
+                  with urllib.request.urlopen(req, timeout=15) as resp:
+                      raw = resp.read()
+                      return json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  if allow_404 and exc.code == 404:
+                      return None
+                  raise RuntimeError('GitHub API %s %s returned HTTP %s' %
+                                     (method, path, exc.code)) from exc
+          issue = api('GET', '/issues/%d' % number)
+          if 'pull_request' in issue:
+              print('Pull request ignored')
+              raise SystemExit(0)
+          title = str(issue.get('title') or '')
+          body = str(issue.get('body') or '')
+          query = (title + '\n' + body).lower()
+          if 'volunteer' in query or 'join community' in query or 'contributor invitation' in query:
+              category, labels = 'Community participation', ['community-review', 'welcome-contributor']
+          elif 'emergency-hook' in query or 'test 14' in query:
+              category, labels = 'Urgent independent review', ['community-review', 'urgent-review', 'needs-evidence']
+          else:
+              category, labels = 'Evidence-based community review', ['community-review', 'needs-evidence']
+          label_info = {
+              'community-review': ('1870ba', 'Community-led review; not automatic approval'),
+              'urgent-review': ('b60205', 'Time-sensitive review, no production access'),
+              'needs-evidence': ('fbca04', 'Reproducible test evidence requested'),
+              'welcome-contributor': ('0e8a16', 'Invitation for volunteers and contributors')
+          }
+          for label in labels:
+              code = urllib.parse.quote(label, safe='')
+              if api('GET', '/labels/' + code, allow_404=True) is None:
+                  color, description = label_info[label]
+                  api('POST', '/labels', {'name': label, 'color': color, 'description': description})
+          already = {label['name'] for label in issue.get('labels', [])}
+          missing = [label for label in labels if label not in already]
+          if missing:
+              api('POST', '/issues/%d/labels' % number, {'labels': missing})
+          marker = '<!-- sl3cg-community-coordination-v1 -->'
+          note = (
+              marker + '\n### Community Coordination V1 — evidence reminder\n\n' +
+              '**Classification:** ' + category + '\n\n' +
+              'This automated classification is **not a code review or approval**.\n\n' +
+              '- [ ] Link the affected source version or commit and relevant issue/test ID\n' +
+              '- [ ] Describe the expected and actual result with reproduction steps\n' +
+              '- [ ] Provide actual test commands, environment and exit codes, or state NOT_RUN\n' +
+              '- [ ] Distinguish advice, mock testing, CI and production observations\n' +
+              '- [ ] Exclude passwords, personal data, private code and unpublished vulnerabilities\n\n' +
+              '[Volunteer to contribute](https://github.com/' + repo +
+              '/issues/new?template=community-volunteer.yml) · ' +
+              '[Community rules](https://github.com/' + repo +
+              '/blob/main/docs/COMMUNITY-AUTOMATION-V1.md)\n\n' +
+              'No AI agent is automatically notified or granted source/production access by this comment. ' +
+              'Acknowledgment requires a real contributor response.'
+          )
+          comments = api('GET', '/issues/%d/comments?per_page=100' % number)
+          existing = next((c for c in comments
+                           if marker in (c.get('body') or '') and
+                           (c.get('user') or {}).get('login') == 'github-actions[bot]'), None)
+          if existing:
+              if existing.get('body') != note:
+                  api('PATCH', '/issues/comments/%d' % existing['id'], {'body': note})
+              print('Updated existing evidence reminder for issue #%d' % number)
+          else:
+              api('POST', '/issues/%d/comments' % number, {'body': note})
+              print('Created first evidence reminder for issue #%d' % number)
+          print('Classification:', category, 'Labels added:', missing)
+          PY
